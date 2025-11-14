@@ -1,0 +1,79 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.04.0 ] */
+
+/* [wxMaxima: comment start ]
+6/2/2011 (c) Ether
+SWERVE FORWARD KINEMATICS CALCULATOR  script for maxima 5.24.0  http://maxima.sourceforge.net/
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+kill(all)$
+load("minpack")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+*** USER ENTERS DATA IN CELL IMMEDIATELY BELOW ***
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+L: 30$  W: 24$ /*wheelbase and trackwidth in inches*/
+
+sFR: 6.6146087960253$ /*wheel tangential speeds in feet/second*/
+sFL: 9.6813559654012$
+sRL: 7.4997966956141$
+sRR: 2.5042656950073$
+
+aFR: 1.183014673400058$ /*wheel angles in radians clockwise from straight ahead*/
+aFL: 0.6847789579122$
+aRL: -0.016464555187806$
+aRR: -0.049325965088199$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+*** NO USER DATA ENTRY BEYOND THIS POINT ***
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+R: sqrt(L^2+W^2)$ Lr: L/R$  Wr: W/R$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+RCW: omega*(R/2)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+A: STR-RCW*(Lr)$  B: STR+RCW*(Lr)$   C: FWD-RCW*(Wr)$   D: FWD+RCW*(Wr)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+sFR_: sqrt(B^2+C^2)$ sFL_: sqrt(B^2+D^2)$ sRL_: sqrt(A^2+D^2)$ sRR_: sqrt(A^2+C^2)$
+aFR_: atan2(B,C)$ aFL_: atan2(B,D)$ aRL_: atan2(A,D)$ aRR_: atan2(A,C)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+Ks: 10$ Ka: 180/%pi$
+s1: Ks*(sFR-sFR_)$ s2: Ks*(sFL-sFL_)$ s3: Ks*(sRL-sRL_)$ s4: Ks*(sRR-sRR_)$
+a1: Ka*(aFR-aFR_)$ a2: Ka*(aFL-aFL_)$ a3: Ka*(aRL-aRL_)$ a4: Ka*(aRR-aRR_)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+function_list: [s1,s2,s3,s4,a1,a2,a3,a4]$
+"FORWARD KINEMATIC SOLUTION:";
+sol: minpack_lsquares(function_list,[FWD,STR,omega],[.1,.1,.1]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+The solution given in the cell immediately above is, respectively,
+- the vehicle forward speed in feet/second;
+- the vehicle strafe right speed in feet/second;
+- the vehicle clockwise rotation in radians/second;
+- the "goodness of fit*;
+- and finally a return status from the function (see maxima user docs)
+
+*this gives the accuracy, in +/- tenths of a ft/sec and +/- degrees, of the 
+ inverse kinematic solution for wheel speeds and wheel steering angles
+ associated with the forward kinematic vehicle motion solution given above.
+   [wxMaxima: comment end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

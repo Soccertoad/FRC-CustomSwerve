@@ -1,0 +1,67 @@
+7/28/2011  Ether
+
+
+How to Use Excel 2000
+to solve for quadratic polynomial coefficients
+for minimum max absolute error 
+with constrained endpoints
+
+
+fill cells C1..C46 with 0, 1, 2, ... 45
+
+
+in cell B1, type this formula:
+=TAN(C1/180*PI())
+... and then copy it down to cell B46
+
+
+find a trendline equation:
+- highlight cells B1..C46 and plot an XY "scatter graph"
+- right-click on the curve and select "add trendline"
+  from the context menu
+- select polynomial order 2
+- select options "display equation on chart"
+- click "OK"
+
+
+- TYPE THE 3 COEFFICIENTS OF THE TRENDLINE EQUATION
+  INTO CELLS  A1, A2, and A3.  (These act as the
+  starting "seed" value for the Solver in the last step) 
+
+
+in cell D1, type this formula:
+=B1*($A$1*B1+$A$2)+$A$3
+... and then copy it down to cell D46
+
+
+in cell E1, type this formula:
+=ABS(D1-C1)
+... and then copy it down to cell E46
+
+
+in cell A5, type this formula:
+=MAX(E1:E46)
+
+
+click Tools|Solver and:
+- set target cell $A$5
+- Equal to "Min"
+- By Changing Cells $A$1:$A$3
+- Subject to Constraints
+  $E$1 <= 0.005
+  $E$46 <= 0.005
+- Options Conjugate
+- click "Solve"
+- click Keep Solver Solution
+
+
+The Solver finds a “local” minimum. 
+Try changing the “seed” values in cells
+A1,A2,A3 slightly and re-run Solver
+to try to find the solution which
+gives the smallest error.
+
+
+
+
+
